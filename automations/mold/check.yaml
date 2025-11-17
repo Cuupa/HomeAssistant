@@ -1,0 +1,103 @@
+alias: Schimmelgefahrprüfung
+description: ""
+triggers:
+  - trigger: time_pattern
+    minutes: /5
+conditions: []
+actions:
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.aussentemperatur
+        below: sensor.aussen_taupunkt
+      - condition: numeric_state
+        entity_id: sensor.differenz_luftfeuchtigkeit_wohnzimmer_aussen
+        above: 3.5
+    then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_wohnzimmer
+    else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_wohnzimmer
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.aussentemperatur
+        below: sensor.aussen_taupunkt
+      - condition: numeric_state
+        entity_id: sensor.differenz_luftfeuchtigkeit_vorratskammer_aussen
+        above: 3.5
+    then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_vorratskammer
+    else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_vorratskammer
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.aussentemperatur
+        below: sensor.aussen_taupunkt
+      - condition: numeric_state
+        entity_id: sensor.differenz_luftfeuchtigkeit_schlafzimmer_aussen
+        above: 3.5
+    then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_schlafzimmer
+    else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_schlafzimmer
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.aussentemperatur
+        below: sensor.aussen_taupunkt
+      - condition: numeric_state
+        entity_id: sensor.differenz_luftfeuchtigkeit_buro_aussen
+        above: 3.5
+    then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_buro
+    else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_buro
+  - if:
+      - condition: numeric_state
+        entity_id: sensor.aussentemperatur
+        below: sensor.aussen_taupunkt
+      - condition: numeric_state
+        entity_id: sensor.differenz_luftfeuchtigkeit_badezimmer_aussen
+        above: 3.5
+    then:
+      - action: input_boolean.turn_on
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_badezimmer
+    else:
+      - action: input_boolean.turn_off
+        metadata: {}
+        data: {}
+        target:
+          entity_id: input_boolean.schimmelgefahr_badezimmer
+mode: single
