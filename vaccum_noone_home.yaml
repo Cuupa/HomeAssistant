@@ -1,0 +1,35 @@
+alias: Wischbert saugen bei Abwesenheit
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - switch.jemand_zu_hause
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+    to:
+      - "off"
+    from:
+      - "on"
+conditions:
+  - condition: time
+    after: "12:00:00"
+    before: "18:00:00"
+actions:
+  - device_id: 6710c94c706f89637f608474062369bf
+    domain: select
+    entity_id: fd2b770bb10adf4564f551a9b2f90b35
+    type: select_option
+    option: "off"
+  - action: vacuum.set_fan_speed
+    metadata: {}
+    data:
+      fan_speed: max_plus
+    target:
+      device_id: 6710c94c706f89637f608474062369bf
+  - device_id: 6710c94c706f89637f608474062369bf
+    domain: vacuum
+    entity_id: 63f6c01da0f0bfb694ed530cddaa740e
+    type: clean
+mode: single
