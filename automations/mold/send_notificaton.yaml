@@ -1,0 +1,79 @@
+alias: Benachrichtigung Schimmelgefahr
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - input_boolean.schimmelgefahr_wohnzimmer
+      - input_boolean.schimmelgefahr_vorratskammer
+      - input_boolean.schimmelgefahr_schlafzimmer
+      - input_boolean.schimmelgefahr_buro
+      - input_boolean.schimmelgefahr_badezimmer
+    from: "off"
+    to: "on"
+actions:
+  - variables:
+      sensor_liste:
+        - sensor.differenz_luftfeuchtigkeit_wohnzimmer_aussen
+        - sensor.differenz_luftfeuchtigkeit_vorratskammer_aussen
+        - sensor.differenz_luftfeuchtigkeit_schlafzimmer_aussen
+        - sensor.differenz_luftfeuchtigkeit_buero_aussen
+        - sensor.differenz_luftfeuchtigkeit_badezimmer_aussen
+      liste_ueber_schwellwert: |
+        {% set ns = namespace(liste=[]) %}
+        {% for s in sensor_liste %}
+          {% if (states(s) | float) > (states('number.schwellwert_luftfeuchtigkeitsdifferenz') | float) %}
+            {% set ns.liste = ns.liste + [s] %}
+          {% endif %}
+        {% endfor %}
+        {{ ns.liste }}
+  - repeat:
+      for_each: "{{ liste_ueber_schwellwert }}"
+      sequence:
+        - variables:
+            name: "{{ state_attr(repeat.item, 'friendly_name') }}"
+            raum: >-
+              {{ state_attr(repeat.item, 'friendly_name')  | replace('Differenz
+              Luftfeuchtigkeit ', '')  | replace('-Außen', '')  | trim }}
+        - parallel:
+            - action: notify.mobile_app_pixel_6
+              data:
+                title: >
+                  {% set name = state_attr(repeat.item, 'friendly_name') %} {%
+                  set raum = name
+                      | replace('Differenz Luftfeuchtigkeit ', '')
+                      | replace('-Außen', '')
+                      | trim %}
+                  {{ raum }} lüften
+                message: >
+                  {% set name = state_attr(repeat.item, 'friendly_name') %} {%
+                  set raum = name
+                      | replace('Differenz Luftfeuchtigkeit ', '')
+                      | replace('-Außen', '')
+                      | trim %}
+                  Erhöhte Luftfeuchtigkeit im {{ raum }}.
+                data:
+                  persistent: true
+                  sticky: true
+                  tag: lueften-{{raum}}
+            - action: notify.mobile_app_sm_s931b
+              data:
+                title: >
+                  {% set name = state_attr(repeat.item, 'friendly_name') %} {%
+                  set raum = name
+                      | replace('Differenz Luftfeuchtigkeit ', '')
+                      | replace('-Außen', '')
+                      | trim %}
+                  {{ raum }} lüften
+                message: >
+                  {% set name = state_attr(repeat.item, 'friendly_name') %} {%
+                  set raum = name
+                      | replace('Differenz Luftfeuchtigkeit ', '')
+                      | replace('-Außen', '')
+                      | trim %}
+                  Erhöhte Luftfeuchtigkeit im {{ raum }}.
+                data:
+                  persistent: true
+                  sticky: true
+                  tag: lueften-{{raum}}
+              enabled: true
+mode: single
