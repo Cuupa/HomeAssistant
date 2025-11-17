@@ -1,0 +1,29 @@
+alias: Rückkehr zum Dock nach Abwesenheit
+description: ""
+triggers:
+  - trigger: state
+    entity_id:
+      - switch.jemand_zu_hause
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+    to:
+      - "on"
+    from:
+      - "off"
+conditions:
+  - condition: time
+    after: "12:00:00"
+    before: "18:00:00"
+  - condition: device
+    device_id: 6710c94c706f89637f608474062369bf
+    domain: vacuum
+    entity_id: 63f6c01da0f0bfb694ed530cddaa740e
+    type: is_cleaning
+actions:
+  - device_id: 6710c94c706f89637f608474062369bf
+    domain: vacuum
+    entity_id: 63f6c01da0f0bfb694ed530cddaa740e
+    type: dock
+mode: single
