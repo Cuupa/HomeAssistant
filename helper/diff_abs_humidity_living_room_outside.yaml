@@ -1,0 +1,3 @@
+{{
+(float(states.sensor.wohnzimmer_absolute_luftfeuchtigkeit.state) - float(states.sensor.aussen_absolute_luftfeuchtigkeit.state)) | float | round(1)
+}}
