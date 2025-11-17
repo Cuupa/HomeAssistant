@@ -1,0 +1,5 @@
+{{ 
+states('device_tracker.fw01_pixel_6') == 'home' 
+or 
+states('device_tracker.fw01_s25') == 'home' 
+}}
